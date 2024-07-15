@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish Weight Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0'); /* Replace with your preferred background image */
+            background-size: cover;
+            background-repeat: no-repeat;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        label, input {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            margin-top: 20px;
+            border: none;
+            border-radius: 5px;
+            background: #1abc9c;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #16a085;
+        }
+
+        #result {
+            font-size: 1.5em;
+            margin-top: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Fish Weight Prediction</h1>
+    <form id="predictionForm">
+        <label for="species">Species:</label>
+        <input type="number" id="species" name="species"><br><br>
+        <label for="length1">Length1:</label>
+        <input type="number" id="length1" name="length1"><br><br>
+        <label for="length2">Length2:</label>
+        <input type="number" id="length2" name="length2"><br><br>
+        <label for="length3">Length3:</label>
+        <input type="number" id="length3" name="length3"><br><br>
+        <label for="height">Height:</label>
+        <input type="number" id="height" name="height"><br><br>
+        <label for="width">Width:</label>
+        <input type="number" id="width" name="width"><br><br>
+        <button type="button" onclick="makePrediction()">Predict</button>
+    </form>
+    <h2 id="result"></h2>
+    
+    <script>
+        function makePrediction() {
+            const form = document.getElementById('predictionForm');
+            const formData = new FormData(form);
+            const data = {
+                features: [
+                    parseFloat(formData.get('species')),
+                    parseFloat(formData.get('length1')),
+                    parseFloat(formData.get('length2')),
+                    parseFloat(formData.get('length3')),
+                    parseFloat(formData.get('height')),
+                    parseFloat(formData.get('width'))
+                ]
+            };
+            
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = `Predicted Weight: ${data.prediction}`;
+            });
+        }
+    </script>
+</body>
+</html>
