@@ -5,7 +5,7 @@ import numpy as np
 app = Flask(__name__)
 
 # Load your pre-trained model
-model = joblib.load('random_forest_regressor')
+model = joblib.load('random_forest_regressor.pkl')
 
 # Sample encoding dictionary for species (replace with your actual encoding)
 species_encoding = {
