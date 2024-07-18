@@ -115,7 +115,15 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('result').innerText = `Predicted Weight: ${data.prediction}`;
+                if (data.prediction) {
+                    document.getElementById('result').innerText = `Predicted Weight: ${data.prediction}`;
+                } else {
+                    document.getElementById('result').innerText = 'Prediction failed. Please try again.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'An error occurred. Please try again later.';
             });
         }
     </script>
