@@ -1,48 +1,31 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import joblib
 import numpy as np
 
 app = Flask(__name__)
 
-# Load your pre-trained model
+# Load the trained model
 model = joblib.load('random_forest_regressor.pkl')
 
-# Sample encoding dictionary for species (replace with your actual encoding)
-species_encoding = {
-    'Bream': 0,
-    'Roach': 1,
-    'Whitefish': 2,
-    'Parkki': 3,
-    'Perch': 4,
-    'Pike': 5,
-    'Smelt': 6
-}
+# Home route
+@app.route('/')
+def home():
+    return render_template('index.html')
 
+# Prediction route
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.json
-    features = data['features']
+    # Get data from the POST request
+    data = request.get_json(force=True)
     
-    try:
-        # Encode the species
-        species = features[0]
-        if species in species_encoding:
-            species_encoded = species_encoding[species]
-        else:
-            return jsonify({"error": "Unknown species"}), 400
-
-        # Replace species with its encoded value
-        features[0] = species_encoded
-        
-        # Convert the features list to a numpy array
-        features_array = np.array([features])
-        
-        # Make prediction
-        prediction = model.predict(features_array)
-        
-        return jsonify({"prediction": prediction[0]})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    # Convert data to numpy array
+    features = np.array([data['features']])
+    
+    # Make prediction using the model
+    prediction = model.predict(features)
+    
+    # Return the prediction
+    return jsonify({'prediction': prediction[0]})
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
