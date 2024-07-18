@@ -71,17 +71,17 @@
     <h1>Fish Weight Prediction</h1>
     <form id="predictionForm">
         <label for="species">Species:</label>
-        <input type="text" id="species" name="species" required pattern="[A-Za-z\s]+"><br><br>
+        <input type="number" id="species" name="species"><br><br>
         <label for="length1">Length1:</label>
-        <input type="number" id="length1" name="length1" required step="any"><br><br>
+        <input type="number" id="length1" name="length1"><br><br>
         <label for="length2">Length2:</label>
-        <input type="number" id="length2" name="length2" required step="any"><br><br>
+        <input type="number" id="length2" name="length2"><br><br>
         <label for="length3">Length3:</label>
-        <input type="number" id="length3" name="length3" required step="any"><br><br>
+        <input type="number" id="length3" name="length3"><br><br>
         <label for="height">Height:</label>
-        <input type="number" id="height" name="height" required step="any"><br><br>
+        <input type="number" id="height" name="height"><br><br>
         <label for="width">Width:</label>
-        <input type="number" id="width" name="width" required step="any"><br><br>
+        <input type="number" id="width" name="width"><br><br>
         <button type="button" onclick="makePrediction()">Predict</button>
     </form>
     <h2 id="result"></h2>
@@ -89,15 +89,10 @@
     <script>
         function makePrediction() {
             const form = document.getElementById('predictionForm');
-            if (!form.checkValidity()) {
-                alert('Please fill out all fields correctly.');
-                return;
-            }
-            
             const formData = new FormData(form);
             const data = {
                 features: [
-                    formData.get('species'),
+                    parseFloat(formData.get('species')),
                     parseFloat(formData.get('length1')),
                     parseFloat(formData.get('length2')),
                     parseFloat(formData.get('length3')),
@@ -115,15 +110,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data.prediction) {
-                    document.getElementById('result').innerText = `Predicted Weight: ${data.prediction}`;
-                } else {
-                    document.getElementById('result').innerText = 'Prediction failed. Please try again.';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('result').innerText = 'An error occurred. Please try again later.';
+                document.getElementById('result').innerText = `Predicted Weight: ${data.prediction}`;
             });
         }
     </script>
